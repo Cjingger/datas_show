@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/bootstraptable/bootstrap-table.min.css">
+    <script src="../static/jquery.js"></script>
+    <script src="../static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/bootstraptable/bootstrap-table.min.js"></script>
+    <script src="../static/bootstraptable/locale/bootstrap-table-zh-CN.min.js"></script>
+    <style>
+        .fixed-table-pagination{
+            width: 60%;
+        }
+        .fixed-table-toolbar{
+            width: 60%;
+        }
+    </style>
+</head>
+{% csrf_token %}
+<body>
+    <div style="margin-top:10px;margin-left: 20px;font-size: 15px">
+        <span>欢迎: {{name}}</span>
+        <span><a href="/home">首页</a></span>
+        <span><a href="/person" style="margin-left: 85%">个人中心</a></span>
+        <span><a href="/loginout" >退出</a></span>
+    </div>
+    <div align="center">
+        <h3 >导出或推历史记录</h3>
+        <table id="show_exportion_history" style="width: 60%">
+        </table>
+    </div>
+
+    <script>
+    var _init_tab = $('#show_exportion_history');
+    function init_data() {
+        _init_tab.bootstrapTable({
+            url:'/get_exportion_history',
+            method: 'GET',
+            dataType: "json",
+            uniqueId: 'id',
+            striped: true,
+            cache: false,
+            sortName: 'id',
+            sortable: false,
+            sortOrder: 'desc',
+            sidePagination: "server",
+            undefinedText: '--',
+            singleSelect: false,
+            search: false,
+            strictSearch: true,
+            clickToSelect: true,
+            pagination: true,
+            pageNumber: 1,
+            pageSize: 10,
+            paginationPreText: "<",
+            paginationNextText: ">",
+            queryParamsType: "",
+            showRefresh: true,
+            {#responseHandler: responseHandler,#}
+
+            queryParams: function (params) {
+                return {
+                    'offset': this.pageNumber, // SQL语句起始索引
+                    'pagesize': this.pageSize
+                };
+            },
+
+            columns: [{
+                    field: 'id',
+                    title: 'id',
+
+
+                },
+                {
+                    field: 'name',
+                    title: '姓名',
+
+                },
+                {
+                    field: 'table_name',
+                    title: '数据表名',
+
+
+                },
+                {
+                    field: 'discipline',
+                    title: '大学科',
+
+                },
+                {
+                    field: 'subdiscipline',
+                    title: '小学科',
+
+
+                },
+                {
+                    field: 'classify',
+                    title: '期刊名',
+
+                },
+                {
+                    field: 'time',
+                    title: '时间',
+
+                },
+                            {
+                    field: 'send_type',
+                    title: '类型',
+
+                },
+                {
+                    field: 'num',
+                    title: '总数',
+
+                },
+                {
+                    field: 'start_num',
+                    title: '起始数量',
+                },
+                {
+                    field: 'end_num',
+                    title: '结束数量',
+
+                },
+
+            ],
+
+            onLoadError: function () {
+                alert("数据加载失败！", "错误提示");
+            }
+            //onClickRow: function (row, $element) {
+            //    EditViewById(id, 'view');
+            //}
+        });
+
+    }
+
+    $(function () {
+       init_data()
+    });
+
+
+
+    </script>
+
+
+
+</body>
+</html>

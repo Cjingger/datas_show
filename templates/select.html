@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>湖北省众科自然科学研究院有限公司</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://www.jq22.com/jquery/bootstrap-3.3.4.css"/>
+    <link href="https://www.jq22.com/jquery/font-awesome.4.6.0.css"
+		rel="stylesheet">
+    <link rel="stylesheet" type="text/css" media="all" href="../static/css/daterangepicker-bs3.css"
+		/>
+    <link rel="shortcut icon" href="http://www.easyace.cn/rstatic/easyace/images/logo.png" />
+    <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/bootstraptable/bootstrap-table.min.css">
+    <script src="../static/jquery.js"></script>
+    <script src="../static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/bootstraptable/bootstrap-table.min.js"></script>
+    <script src="../static/bootstraptable/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script src="../static/JsonExportExcel.min.js"></script>
+    <script type="text/javascript" src="../static/moment.js"></script>
+    <script type="text/javascript" src="../static/daterangepicker.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+
+</head>
+    <script>
+        document.oncopy = function(){ return false; }
+    </script>
+
+<style>
+    body{
+        margin: 5px;
+        border: 10px;
+        padding: 45px;
+        padding-top: 30px;
+        color: #333;
+        background-image: url("../static/images/index.gif");
+    }
+    .head{
+        border-top: 1px solid #f9f9f9;
+        border-bottom: 1px solid #d0d0d0;
+        width:100%;
+        height: 200px;
+        background-color: #f8f8f8; /* 浏览器不支持时显示 */
+        background-image: linear-gradient(#f8f8f8, #e5e5e5);
+    }
+    .Query_conditions {
+        margin-top: 10px;
+        float: left;
+        margin-right: 30px;
+
+    }
+
+    #exportion{
+        float: right;
+        margin-right: 1%;
+        border: 0;
+        padding:0;
+        border-radius: 13px;
+        width: 60px;
+        height: 26px;
+        color: white;
+        background: #1B94C6;
+        outline: none;
+
+    }
+   .bs-bars{
+       width:100%;
+   }
+
+    .chioce_all{
+        margin-top: 5px;
+        border-radius: 13px;
+        border: 0;
+        background: #337ab7;
+        height: 26px;
+        width: 30%;
+        outline: none;
+        font-size: 12px;
+        padding: 0;
+        margin: 0;
+    }
+
+</style>aj
+
+<body oncopy="return false;">
+    <div class="head" >
+        <div style="margin-top:10px;margin-left: 20px;font-size: 15px">
+            <span>欢迎: {{name}}</span>
+            <span><a href="/person" style="margin-left: 85%">个人中心</a></span>
+            <span><a href="/loginout" >退出</a></span>
+
+        </div>
+
+        <nav style="padding-top: 10px;font-size: 30px;color: #417db9; padding-bottom: 10px"  >
+                <center>湖北省众科自然研究院有限公司数据表</center>
+
+        </nav>
+
+        <div class="Query_conditions"  style="padding-left: 70px;float: left;margin-top: 40px;border-radius: 0.5px">
+                <select name="" id="data" style="width: 170px;height: 26px;border-radius: 13px;border: 0;outline: none;" onmouseover="this.style.borderColor='black';">
+{#                    <option value="sciencedirect">sciencedirect</option>#}
+{#                    <option value="springer">springer</option>#}
+{#                    <option value="sci">sci</option>#}
+{#                    <option value="hans">hans</option>#}
+{#                    <option value="wiley">wiley</option>#}
+{#                    <option value="ei">ei</option>#}
+{#                    <option value="pubmed">pubmed</option>#}
+{#                    <option value="university">university</option>#}
+                    <script>
+
+                        $(document).ready(function(){
+                            $.ajax({
+                                async : false,
+                                url: '/table_name',
+                                type: 'GET',
+                                {#data: form_data,#}
+                                processData: false,  // tell jquery not to process the data
+                                contentType: false, // tell jquery not to set contentType
+                                success: function (data) {
+                                    var table_name_l = JSON.parse(data);
+                                    var obj1 = '';
+                                    for (var i=0;i<table_name_l.length;i++){
+                                        obj1 += '<option value="' + table_name_l[i] + '">' + table_name_l[i] + '</option>'
+
+
+                                    $('#data').html(obj1)
+
+                                }
+
+                                }
+
+                            });
+
+                        })
+
+
+                    </script>
+
+
+                </select>
+        </div>
+
+
+        <div class="Query_conditions"  >
+            <p>请选择国别</p>
+            <select name="" id="is_ch" style="width: 170px;height: 26px;border-radius: 13px;border: 0;outline: none;" onmouseover="this.style.borderColor='black';">
+                <option value="">所有</option>
+                <option value="1">中国</option>
+                <option value="2">欧美</option>
+                <option value="0">其他</option>
+            </select>
+        </div>
+        <div class="Query_conditions" >
+            <p>请输入关键字</p>
+            <input type="text" id="keyword" style="height:26px;border-radius: 13px;border: 0;padding:0;margin-right: 10px;outline: none;">
+        </div>
+        <div class="Query_conditions" >
+            <p>请输入期刊名</p>
+            <input type="text" id="classify_name" style="height:26px;border-radius: 13px;border: 0;padding:0;margin-right: 10px;outline: none;">
+        </div>
+        <div class="Query_conditions" >
+            <p>请输入时间</p>
+            <input type="text" id="time" style="height:26px;border-radius: 13px;border: 0;padding:0;outline: none;">
+        </div>
+        <div class="Query_conditions">
+            <p>查询时间</p>
+               <form class="form-horizontal">
+                 <fieldset>
+                  <div class="control-group" style="margin-right: 30px; width: 250px;height: 26px">
+                    <div class="controls">
+                     <div class="input-prepend input-group">
+{#                         <script>#}
+{#                            var date = new Date();#}
+{#                            var y = date.getFullYear();#}
+{#                            var m = date.getMonth()+1;<!--月，这里的月份必须要+1才是当前月份-->#}
+{#                            var d = date.getDate();#}
+{#                            var d2 = date.getDate()+1;#}
+{#                            document.getElementById("reservation").value = y + "-" +m+ "-" + d + "-" + y + "-" +m+ "-" + d2;#}
+{#                         </script>#}
+                       <span class="add-on input-group-addon"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span><input type="text" readonly style=" width: 250px;height: 26px;border-radius: 13px;border: 0;padding:0;outline: none;" name="reservation" id="reservation" class="form-control" value="" />
+                     </div>
+                    </div>
+                  </div>
+                 </fieldset>
+               </form>
+             <script type="text/javascript">
+               $(document).ready(function() {
+                  $('#reservation').daterangepicker(null, function(start, end, label) {
+                    console.log(start.toISOString(), end.toISOString(), label);
+                  });
+               });
+             </script>
+        </div>
+
+        <div class="Query_conditions" style="padding-top: 30px; color: #F6F6F6">
+            <button type="button" id="query" style="border-radius: 13px;border: 0;background: #1B94C6;height: 26px;width: 100px;outline: none;" onmousedown="this.style.backgroundColor='#d0d0d0'" onmouseup="this.style.backgroundColor='#337ab7'">查询</button>
+        </div>
+    </div>
+
+    <div class="left-1" style="width:20%;height:auto;float:left;background-image: linear-gradient(#e5e5e5, #d9edf7d1);">
+
+        <p style="margin-left: 5px; margin-bottom: 2px;margin-top:5px;font-size: 18px;color: #F6F6F6">
+            <strong style="color: #1B94C6">期刊名</strong>
+            <input id="classify" type="text" placeholder=" 期刊名查询" style="width:50%;height:22px;border-radius: 11px;border: 0;padding:0;margin:5px;outline: none;font-size: 12px;color: #1B94C6">
+            <button type="button" id="classify-btn" style="margin-top: 5px;float:right;border-radius: 13px;border: 0;background: #1B94C6;height: 26px;width: 20%;outline: none;font-size: 12px" onmousedown="this.style.backgroundColor='#d0d0d0'" onmouseup="this.style.backgroundColor='#337ab7'">查询</button>
+            <button class="chioce_all" onclick="checkboxed('check_box_classify')" style="background: #1B94C6">全选</button>
+            <button  class="chioce_all" onclick="uncheckboxed('check_box_classify')" style="background: #1B94C6">取消全选</button>
+
+        </p>
+        <div style="overflow: auto; height:150px; width: auto"  >
+            <form action="" id="classify_list" style="margin-left: 10px" >
+            </form>
+        </div>
+        <p style="margin-left: 5px; margin-bottom: 2px;margin-top:5px;font-size: 15px;color: #F6F6F6">
+            <strong style="color: #1B94C6">大学科</strong>
+            <input id="discipline" type="text" placeholder=" 大学科查询" style="width:55%;height:22px;border-radius: 11px;border: 0;padding:0;margin:5px;outline: none;font-size: 12px;color: #1B94C6">
+            <button type="button" id="discipline-btn" style="margin-top: 5px;float:right;border-radius: 13px;border: 0;background: #1B94C6;height: 26px;width: 20%;outline: none;font-size: 12px" onmousedown="this.style.backgroundColor='#d0d0d0'" onmouseup="this.style.backgroundColor='#337ab7'">查询</button>
+            <button  class="chioce_all" onclick="checkboxed('check_box_discipline')" style="background: #1B94C6">全选</button>
+            <button  class="chioce_all" onclick="uncheckboxed('check_box_discipline')" style="background: #1B94C6">取消全选</button>
+
+        </p>
+        <div style="overflow: auto; height:150px; width: auto">
+            <form action="" id="discipline_list" style="margin-left: 10px">
+            </form>
+        </div>
+
+         <p style="margin-left: 5px;margin-bottom: 2px;margin-top:3px; font-size: 10px;color: #F6F6F6">
+            <strong style="color: #1B94C6">小学科</strong>
+            <input id="subdiscipline" type="text" placeholder=" 小学科查询" style="width:60%;height:22px;border-radius: 11px;border: 0;padding:0;margin:5px;outline: none;font-size: 12px;color: #1B94C6">
+            <button type="button" id="subdiscipline-btn" style="float:right;border-radius: 13px;border: 0;background: #1B94C6;height: 26px;width: 20%;outline: none;font-size: 12px" onmousedown="this.style.backgroundColor='#d0d0d0'" onmouseup="this.style.backgroundColor='#337ab7'">查询</button>
+            <button  class="chioce_all" onclick="checkboxed('check_box_subdiscipline')" style="background: #1B94C6">全选</button>
+            <button  class="chioce_all" onclick="uncheckboxed('check_box_subdiscipline')" style="background: #1B94C6">取消全选</button>
+
+        </p>
+        <div style="overflow: auto; height:139px;">
+            <form action="" id="subdiscipline_list" style="margin-left: 10px">
+            </form>
+
+    </div>
+        <!--查询期刊名-->
+        <script>
+
+            // 全选和取消全选
+            function checkboxed(objName){
+                var objNameList=document.getElementsByName(objName);
+
+                if(null!=objNameList){
+                    for(var i=0;i<objNameList.length;i++){
+                        objNameList[i].checked="checked";
+                    }
+                }
+            }
+
+            function uncheckboxed(objName){
+                var objNameList=document.getElementsByName(objName);
+
+                if(null!=objNameList){
+                    for(var i=0;i<objNameList.length;i++){
+                        objNameList[i].checked="";
+                    }
+                }
+            }
+
+
+            $(document).ready(function () {
+                // 大学科
+                $('#discipline-btn').click(function(){
+                    $.get('/query_discipline',{
+                        'discipline_name': $('#discipline').val(),
+                        'data': $('#data').val(),
+                        },function (data) {
+                            var discipline_list = JSON.parse(data);
+                            var obj1 = '';
+                            for (var i=0;i<discipline_list.length;i++){
+                                obj1 += '<a><input type="checkbox"  value="'+discipline_list[i]+'" name="check_box_discipline" '+' onclick="discipline_check_box_click();">' + discipline_list[i] + '</a><br>'
+
+                        }
+                        $('#discipline_list').html(obj1);
+                    })
+                });
+
+                //小学科
+                $('#subdiscipline-btn').click(function(){
+                    $.get('/query_subdiscipline',{
+                        'subdiscipline_name': $('#subdiscipline').val(),
+                        'data': $('#data').val(),
+                        },function (data) {
+                            var subdiscipline_list =JSON.parse(data);
+                            var obj2 = '';
+                            for (var j=0;j<subdiscipline_list.length;j++){
+                                obj2 += '<a><input type="checkbox"  value="'+subdiscipline_list[j]+'" name="check_box_subdiscipline" '+' onclick="subdiscipline_check_box_click();">' + subdiscipline_list[j] + '</a><br>'
+                        }
+                        $('#subdiscipline_list').html(obj2);
+                    })
+                });
+
+                //期刊名
+                $('#classify-btn').click(function(){
+                    $.get('/query_classify',{
+                        'classify_name': $('#classify').val(),
+                        'data': $('#data').val(),
+                        },function (data) {
+                            var classify_list = JSON.parse(data);
+                            var obj3 = '';
+                            for (var k=0;k<classify_list.length;k++){
+                               obj3 += '<a><input type="checkbox" value="' +classify_list[k]+'" name="check_box_classify" '+'>'+ classify_list[k] + '</a><br>'
+                            }
+                            $('#classify_list').html(obj3);
+                    })
+                })
+            });
+
+
+        </script>
+
+
+    </div>
+
+
+        <script>
+
+            function init_table_name(){
+                $.get('/content', {
+                    'tablename': $('#data').val(),
+                }, function (data) {
+                    var data1 = JSON.parse(data);
+                    var classify_list = data1['classify_list'];
+                    {#console.log(classify_list)#}
+                    var obj1 = '';
+                    for (var i=0;i<classify_list.length;i++){
+                        obj1 += '<a><input type="checkbox" value="'+classify_list[i]+'" name="check_box_classify" '+' onclick="classify_check_box_click();">' + classify_list[i] + '</a><br>'
+                    }
+                    $('#classify_list').html(obj1);
+
+
+                })
+            }
+            //初始化大学科小学科期刊名
+            $(function(){
+                setTimeout(function(){ init_table_name(); }, 100);
+
+            });
+
+            //选择数据来源更改相应得大学科小学科
+            $('#data').change(function () {
+                init_table_name()
+            });
+
+            //点击期刊名 响应大学科 小学科
+            function classify_check_box_click(){
+                var check_box_classify=document.getElementsByName("check_box_classify");
+                var pop_classify=[];
+                     pop_classify.push();
+                for(var j=0;j<check_box_classify.length;j++){
+                    if(check_box_classify[j].checked){
+                        pop_classify.push(check_box_classify[j].value)
+                    }
+                }
+                $.get('/discipline',{
+                    'classify_list':pop_classify.join('@'),
+                    'tablename': $('#data').val(),
+                },function(data){
+                    var data1 = JSON.parse(data);
+                    var discipline_list = data1['discipline_list'];
+                    var subdiscipline_list = data1['subdiscipline_list'];
+
+                    var obj2 = '';
+                    for (var j=0;j<discipline_list.length;j++){
+                        obj2 += '<a><input type="checkbox"  value="'+discipline_list[j]+'" name="check_box_discipline" '+'" onclick="subdiscipline_check_box_click();">' + discipline_list[j] + '</a><br>'
+                    }
+                    $('#discipline_list').html(obj2);
+
+                    var obj3 = '';
+                    for (var k=0;k<subdiscipline_list.length;k++){
+                       obj3 += '<a><input type="checkbox" value="' +subdiscipline_list[k]+'" name="check_box_subdiscipline" '+'>'+ subdiscipline_list[k] + '</a><br>'
+                    }
+                    $('#subdiscipline_list').html(obj3);
+                    }
+
+                )
+            }
+            //点击小学科渲染期刊名
+            function subdiscipline_check_box_click() {
+                var check_box_discipline=document.getElementsByName("check_box_discipline");
+                var pop_discipline=[];
+                     pop_discipline.push();
+                for(var j=0;j<check_box_discipline.length;j++){
+                    if(check_box_discipline[j].checked){
+                        pop_discipline.push(check_box_discipline[j].value)
+                    }
+                }
+
+                $.get('/subdiscipline',{
+                    'classify_list':$('#classify_list').serialize(),
+                    'discipline_list':pop_discipline.join('@'),
+                    'tablename': $('#data').val(),
+
+                },function (data) {
+                    var subdiscipline_list = JSON.parse(data);
+                    var obj3 = '';
+                    for (var k=0;k<subdiscipline_list.length;k++){
+                        obj3 += '<a><input type="checkbox" value="' +subdiscipline_list[k]+'" name="check_box_subdiscipline" '+'>'+ subdiscipline_list[k] + '</a><br>'
+                    }
+                    $('#subdiscipline_list').html(obj3);
+
+
+                })
+
+
+            }
+
+        </script>
+
+    <main  class="content-right" style="float: right;width: 80%;background:#e5e5e5 ">
+
+        <table id="mytab"  class="table table-bordered table-hover" style="background: #f8f8f8;table-layout: fixed;"></table>
+        <style>
+            #toolbar{
+                font-size: 18px;
+                margin-left: 30px;
+                margin-top: 5px;
+            }
+            table tr:nth-child(even){
+                background: #d9edf7d1;
+            }
+            .loading{
+                float: right;
+                width: 15px;
+                height: 15px;
+                margin: 0;
+                margin-top: 5px;
+                margin-right: 7%;
+                position: relative;
+                -webkit-animation: load 1s linear infinite;
+            }
+            .hi{
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                display: none;
+            }
+            .loading span{
+                display: inline-block;
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                background: #99CC66;
+                position: absolute;
+                left: 50%;
+                margin-top: -5px;
+                margin-left: -5px;
+                -webkit-animation: changeBgColor 1.5s ease infinite;
+            }
+            @-webkit-keyframes load{
+                0%{
+                    -webkit-transform: rotate(0deg);
+                }
+                33.3%{
+                    -webkit-transform: rotate(120deg);
+                }
+                66.6%{
+                    -webkit-transform: rotate(240deg);
+                }
+                100%{
+                    -webkit-transform: rotate(360deg);
+                }
+            }
+            @-webkit-keyframes changeBgColor{
+                0%,100%{
+                    background: #99CC66;
+                }
+                33.3%{
+                    background: #FFFF66;
+                }
+                66.6%{
+                    background: #FF6666;
+                }
+            }
+            .loading div:nth-child(2){
+                -webkit-transform: rotate(120deg);
+            }
+            .loading div:nth-child(3){
+                -webkit-transform: rotate(240deg);
+            }
+            .loading div:nth-child(2) span{
+                -webkit-animation-delay: 1s;
+            }
+            .loading div:nth-child(3) span{
+                -webkit-animation-delay: 2s;
+            }
+
+
+
+            </style>
+    </main>
+
+    <script>
+
+        function get_count(){
+            $.get('/get_count',{
+                'data': $('#data').val(),
+                'server':$('#server').val(),
+                'keyword': $('#keyword').val(),
+                'time': $('#time').val(),
+                'time_period': $('#reservation').val(),
+                'is_ch': $('#is_ch').val(),
+                'discipline': $('#discipline_list').serialize(),
+                'subdiscipline': $('#subdiscipline_list').serialize(),
+                'classify': $('#classify_list').serialize(),
+                },function (data) {
+                    $('#toolbar').html('总共搜索到' + '<a> ' + data  + ' </a> '+ '条数据')
+                }
+            )
+
+        }
+
+
+        //表格超出宽度鼠标悬停显示td内容
+        function paramsMatter(value, row, index, field) {
+
+            var span = document.createElement('span');
+            span.setAttribute('title', value);
+            span.innerHTML = value;
+            return span.outerHTML;
+        }
+        //td宽度以及内容超过宽度隐藏
+        function formatTableUnit(value, row, index) {
+            return {
+                css: {
+                    "white-space": 'nowrap',
+                    "text-overflow": 'ellipsis',
+                    "overflow": 'hidden',
+                    "max-width": "150px"
+                }
+            }
+        }
+
+        var _init_tab = $('#mytab');
+
+        function init_data() {
+            get_count()
+            _init_tab.bootstrapTable({
+                url: 'data',
+                method: 'GET',
+                dataType: "json",
+                uniqueId: 'id',
+                striped: true,
+                cache: false,
+                sortName: 'id',
+                sortable: false,
+                sortOrder: 'desc',
+                sidePagination: "server",
+                undefinedText: '--',
+                singleSelect: false,
+                search: false,
+                showRefresh: true,
+                showColumns: true,
+                strictSearch: true,
+                clickToSelect: true,
+                pagination: true,
+                pageNumber: 1,
+                pageSize: 10,
+                toolbar : '<span  id="toolbar" ></span><button type="button" id="exportion" data-toggle="modal" data-target="#exampleModal" data-whatever="@getbootstrap">推送</button> ',
+                paginationPreText: "<",
+                paginationNextText: ">",
+                queryParamsType: "",
+                responseHandler: responseHandler,
+
+
+                queryParams: function (params) {
+                    var temp = {
+                        'data': $('#data').val(),
+                        'keyword': $('#keyword').val(),
+                        'time': $('#time').val(),
+                        'time_period': $('#reservation').val(),
+                        'is_ch': $('#is_ch').val(),
+                        'discipline': $('#discipline_list').serialize(),
+                        'subdiscipline': $('#subdiscipline_list').serialize(),
+                        {#'classify': $('#classify_list').serialize(),#}
+                        'classify': $('#classify_name').val(),
+                        'offset': this.pageNumber, // SQL语句起始索引
+                        'pagesize': this.pageSize
+                    };
+                    return temp;
+                },
+
+                columns: [
+                    {
+                        checkbox:true,
+                        align: 'center',
+                    },
+                    {
+                        field: 'discipline',
+                        title: '大学科',
+                        cellStyle: formatTableUnit,
+                        formatter: paramsMatter
+
+                    },
+                    {
+                        field: 'subdiscipline',
+                        title: '小学科',
+                        cellStyle: formatTableUnit,
+                        formatter: paramsMatter
+
+                    },
+                    {
+                        field: 'classify',
+                        title: '期刊名',
+                        cellStyle: formatTableUnit,
+                        formatter: paramsMatter
+
+                    },
+                    {
+                        field: 'email',
+                        title: '邮箱',
+                        cellStyle: formatTableUnit,
+                        formatter: paramsMatter
+
+                    },
+                    {
+                        field: 'name',
+                        title: '姓名',
+                        cellStyle: formatTableUnit,
+                        formatter: paramsMatter
+
+                    },
+                    {
+                        field: 'article',
+                        title: '标题',
+                        cellStyle: formatTableUnit,
+                        formatter: paramsMatter
+
+                    },
+                    {
+                        field: 'is_ch',
+                        title: '国籍',
+                        cellStyle: formatTableUnit,
+                        formatter: paramsMatter
+
+                    },
+                    {
+                        field: 'is_qikan',
+                        title: '期刊',
+                        cellStyle: formatTableUnit,
+                        formatter: paramsMatter
+
+                    },
+                    {
+                        field: 'keyword',
+                        title: '关键字',
+                        cellStyle: formatTableUnit,
+                        formatter: paramsMatter
+
+                    },
+                    {
+                        field: 'conference',
+                        title: '会议名',
+                        cellStyle: formatTableUnit,
+                        formatter: paramsMatter
+
+                    },
+                    {
+                        field: 'time',
+                        title: '时间',
+                        sortable: true,
+                        cellStyle: formatTableUnit,
+                        formatter: paramsMatter
+
+                    },
+                ],
+
+
+                onLoadError: function () {
+                    alert("数据加载失败！", "错误提示");
+                },
+                //onClickRow: function (row, $element) {
+                //    EditViewById(id, 'view');
+                //}
+            });
+
+        }
+        $(function () {
+            setTimeout(function(){ init_data() }, 100);
+            {##}
+            {#init_data();#}
+            $('#query').click(function () {
+                get_count()
+                _init_tab.bootstrapTable('refresh'); //刷新表格
+
+
+            });
+        });
+
+
+         /* 用于server 分页，表格数据量太大的话 不想一次查询所有数据，可以使用server分页查询， 数据量小的话可以直接把sidePagination: "server" 改为 sidePagination: "client" ， 同时去掉responseHandler: responseHandler就可以了， */
+        function responseHandler(res) {
+            if (res) {
+                return {
+                    "rows" : res.rows,
+                    "total" : res.total,
+                    {#'nums':$('#toolbar').html('总共搜索到' + '<a> ' + res.nums  + ' </a> '+ '条数据')#}
+                };
+            } else {
+                return {
+                    "rows": [],
+                    "total": 0,
+                    {#'nums':$('#toolbar').html('总共搜索到<a> 0 </a>条数据')#}
+                };
+            }}
+
+
+        $(document).ready(function () {
+            $('#movement').click(function () {
+                var start_num = parseInt($('#start_num').val());
+                var end_num = parseInt($('#end_num').val());
+                if(end_num-start_num>100000 || Boolean(start_num) === false || Boolean(end_num) === false || end_num<start_num){
+                    alert('输入有误,请重新输入')
+                }
+                else {
+                    document.getElementById('exampleModal').style.display='none';
+                    $(".modal-backdrop").hide();
+                    var res = confirm('确定提交当前数据?');
+                    if(res){
+                        alert('后台正在提交,请耐心等待')
+                        $.get('/exportion',{
+                            'start_num':start_num,
+                            'end_num':end_num,
+                            'data': $('#data').val(),
+                            'server':$('#server').val(),
+                            'keyword': $('#keyword').val(),
+                            'time': $('#time').val(),
+                            'time_period': $('#reservation').val(),
+                            'is_ch': $('#is_ch').val(),
+                            'discipline': $('#discipline_list').serialize(),
+                            'subdiscipline': $('#subdiscipline_list').serialize(),
+                            'classify': $('#classify_name').val(),
+                            },function (data) {
+                            if(data !== "200"){
+                                var res = strToJson(data)
+                                var count = Object.keys(res).length;
+                                console.log("count",count)
+                                if (count > 7){
+                                    exportExcel02(res)
+                                }
+                                else exportExcel(res)
+                            }
+                        })
+                    }else{
+                        alert('您取消当前提交操作')
+                    }
+                }
+            })
+        })
+
+
+        // 导出查询数据
+        function exportExcel(obj) {
+            var option={};
+            option.fileName = '%s' % $('#data').val()  //文件名称
+            option.datas=[
+              {
+                sheetData:obj,
+                sheetName:'sheet',  //sheet名称
+                sheetFilter:['email','article','name','area','classify','discipline','subdiscipline','year'],    //用于过滤json中的数据进行导出数据筛选
+                sheetHeader:['email','article','name','area','classify','discipline','subdiscipline','year'],  //第一行的标题
+              }
+            ];
+            var toExcel=new ExportJsonExcel(option);
+            toExcel.saveExcel();
+        }
+
+        // 导出查询数据
+        function exportExcel02(obj) {
+            var option={};
+            option.fileName = '%s' % $('#data').val()  //文件名称
+            option.datas=[
+              {
+                sheetData:obj,
+                sheetName:'sheet',  //sheet名称
+                sheetFilter:['email','article','name','area','classify','discipline','subdiscipline','year','conference'],    //用于过滤json中的数据进行导出数据筛选
+                sheetHeader:['email','article','name','area','classify','discipline','subdiscipline','year','conference'],  //第一行的标题
+              }
+            ];
+            var toExcel=new ExportJsonExcel(option);
+            toExcel.saveExcel();
+        }
+
+        {# 转化json#}
+        function strToJson(str){
+            var res = (new Function("return " + str))();
+            return res;
+        }
+
+
+
+    </script>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title" id="exampleModalLabel">请输入推送数量区间(起始和结束差最大十万)</h3>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">起始:</label>
+                <input type="text" class="form-control" id="start_num">
+              </div>
+              <div class="form-group">
+                <label for="message-text" class="col-form-label">结束:</label>
+                <input type="text" class="form-control" id="end_num"></input>
+              </div>
+              <div class="form-group">
+                  <label for="message-text" class="col-form-label">导出/提交服务器</label>
+                  <br>
+                  <select id="server"  class="form-control">
+                    <option value="export">导出</option>
+                    <option value="http://ssci.icmem.cn/">http://ssci.icmem.cn/</option>
+                  </select>
+              </div>
+
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+            <button type="button"  id="movement" class="btn btn-primary">确定</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+</body>
+
+</html>
