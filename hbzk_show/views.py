@@ -136,6 +136,7 @@ def data(request):
             subdiscipline = request.GET['subdiscipline']
             is_ch = request.GET['is_ch']
             classify = request.GET['classify']
+            print("classify", classify)
             pagesize = int(request.GET['offset']) - 1
             pagenumber = int(request.GET['pagesize'])
             if discipline:
@@ -149,7 +150,7 @@ def data(request):
                 subdiscipline_ = ''
 
             if classify:
-                classify_ = " and INSTR(classify, '" + urllib.parse.unquote_plus(classify.replace('check_box_classify=','').replace("&","','")) + "') "
+                classify_ = " and classify in ('" + urllib.parse.unquote_plus(classify.replace('check_box_classify=','').replace("&","','")) + "') "
             else:
                 classify_ = ''
             if period:
@@ -183,7 +184,7 @@ def data(request):
             sql = 'SELECT  discipline,subdiscipline,classify,email,name,article,is_ch,is_qikan,keyword,conference,time from ' + tablename + ' where 1=1 ' + discipline_ + is_ch_ + classify_ + subdiscipline_ + keyword_ + tim_ + period_ +' limit {},{}'.format(
                 pagesize * pagenumber, pagenumber) if "conference" in str(data[-1]) else 'SELECT  discipline,subdiscipline,classify,email,name,article,is_ch,is_qikan,keyword,NULL,time from '+tablename +' where 1=1 ' + discipline_ + is_ch_ + classify_ + subdiscipline_ + keyword_ + tim_ + period_ +' limit {},{}'.format(pagesize*pagenumber,pagenumber)
             _sql = 'SELECT  count(id) from ' + tablename + ' where 1=1 ' + discipline_ + is_ch_ + classify_ + subdiscipline_ + keyword_ + tim_ + period_
-            print(sql)
+            # print(sql)
             cursor.execute(sql)
             data = cursor.fetchall()
             rows = []
@@ -374,7 +375,7 @@ def get_exportion(request):
             subdiscipline = request.GET['subdiscipline']
             is_ch = request.GET['is_ch']
             classify = request.GET['classify']
-
+            print("classify", classify)
             if discipline:
                 discipline_ = " and discipline in ('" + urllib.parse.unquote_plus(discipline.replace('check_box_discipline=','').replace("&","','")) + "') "
             else:
@@ -415,7 +416,7 @@ def get_exportion(request):
             sql1 = 'SELECT  discipline from '+tablename +' where 1=1 ' + discipline_ + is_ch_ + classify_ + subdiscipline_ + keyword_ + tim_ + ' group by discipline'
             cursor.execute(sql1)
             get_discipline = cursor.fetchall()
-            print("get_discipline", get_discipline)
+            # print("get_discipline", get_discipline)
             if len(get_discipline)!=0:
                 title = name_ +  tablename + '-'+ get_discipline[-1][0] + '-'+str(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
             else:

@@ -1,0 +1,52 @@
+table {
+    background:#DCDFE6;
+    width: 60%;
+    table-layout: fixed;
+}
+
+td{
+    background:#FFFFFF;
+    height: 40px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-break: break-word;
+}
+
+.btn_ { /* 按钮美化 */
+	width: 10%; /* 宽度 */
+	height: 40px; /* 高度 */
+	border-width: 0px; /* 边框宽度 */
+	border-radius: 3px; /* 边框半径 */
+	background: #e9eaa2; /* 背景颜色 */
+	cursor: pointer; /* 鼠标移入按钮范围时出现手势 */
+	outline: none; /* 不显示轮廓线 */
+	font-family: Microsoft YaHei; /* 设置字体 */
+	color: white; /* 字体颜色 */
+	font-size: 17px; /* 字体大小 */
+    /*margin-left: 30%;*/
+}
+.btn_:hover { /* 鼠标移入按钮范围时改变颜色 */
+	background: #5599FF;
+}
+
+#btn-info{
+    margin-left:50%
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

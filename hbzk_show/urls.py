@@ -37,11 +37,12 @@ urlpatterns = [
     url(r'^exportion_history$', views.exportion_history),
     url(r'^get_exportion_history$', views.get_exportion_history),
     url(r'^get_count$', views.get_count),
-    # url(r'^verify$',views.verify)
     url(r'^unspider/', include('unspider.urls')),
     url(r'^scispider/', include('scispider.urls')),
     url(r'^ei/', include('ei_app.urls')),
     url(r'^data_view/', include('data_view.urls')),
+    url(r'^dataspider/', include('dataspider.urls')),
+
 
 
 ]

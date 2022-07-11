@@ -20,6 +20,10 @@
     <script src="../static/JsonExportExcel.min.js"></script>
     <script type="text/javascript" src="../static/moment.js"></script>
     <script type="text/javascript" src="../static/daterangepicker.js"></script>
+
+    <script src="../../static/bootstrap/js/fileinput.min.js"></script>
+    <link rel="stylesheet" href="../../static/bootstrap/css/fileinput.min.css">
+    <script src="../../static/bootstrap/js/zh.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 
 </head>
@@ -157,6 +161,7 @@
         </div>
         <div class="Query_conditions" >
             <p>请输入期刊名</p>
+            <input id="input-b2" name="input-b2" type="file" class="file" data-show-preview="false">
             <input type="text" id="classify_name" style="height:26px;border-radius: 13px;border: 0;padding:0;margin-right: 10px;outline: none;">
         </div>
         <div class="Query_conditions" >
@@ -507,12 +512,12 @@
                 'is_ch': $('#is_ch').val(),
                 'discipline': $('#discipline_list').serialize(),
                 'subdiscipline': $('#subdiscipline_list').serialize(),
-                'classify': $('#classify_list').serialize(),
+                {#'classify': $('#classify_list').serialize(),#}
+                'classify': $('#classify_name').val(),
                 },function (data) {
                     $('#toolbar').html('总共搜索到' + '<a> ' + data  + ' </a> '+ '条数据')
                 }
-            )
-
+            );
         }
 
 
@@ -681,15 +686,17 @@
 
         }
         $(function () {
-            setTimeout(function(){ init_data() }, 100);
-            {##}
-            {#init_data();#}
+            setTimeout(function(){
+                init_data()
+            });
+            }, 100);
             $('#query').click(function () {
                 get_count()
                 _init_tab.bootstrapTable('refresh'); //刷新表格
+                init_data();
+            {##}
+            {#init_data();#}
 
-
-            });
         });
 
 
@@ -734,6 +741,7 @@
                             'is_ch': $('#is_ch').val(),
                             'discipline': $('#discipline_list').serialize(),
                             'subdiscipline': $('#subdiscipline_list').serialize(),
+                            {#'classify': $('#classify_list').serialize(),#}
                             'classify': $('#classify_name').val(),
                             },function (data) {
                             if(data !== "200"){

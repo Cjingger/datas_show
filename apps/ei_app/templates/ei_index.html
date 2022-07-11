@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ei查询导出</title>
+    <link rel="stylesheet" href="../../static/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../static/bootstraptable/bootstrap-table.min.css">
+    <script src="../../static/jquery.js"></script>
+    <script src="../../static/ei_app/ei_index.js"></script>
+    <script src="../../static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../../static/bootstraptable/bootstrap-table.min.js"></script>
+    <script src="../../static/bootstraptable/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script src="../../static/JsonExportExcel.min.js"></script>
+
+    <style>
+        tr {
+            height: 10%;
+        }
+
+
+    </style>
+
+</head>
+<body>
+{% csrf_token %}
+
+    <div style="margin-top:10px;margin-left: 20px;font-size: 15px">
+        <span>欢迎: {{name}}</span>
+        <span><a href="/home">首页</a></span>
+        <span><a href="/person" style="margin-left: 85%">个人中心</a></span>
+        <span><a href="/loginout" >退出</a></span>
+    </div>
+    <div style="width: 70%; margin-left: 15%;margin-top: 2%">
+        <p>请在下方填入相应的约束词, 点击查询按钮进行查询</p>
+        <input type="text" placeholder="请输入时间(可不填)" id="time">
+
+        <input type="text" placeholder="请输入归类词(可不填)" id="clss_code">
+
+        <input type="text" placeholder="请输入受控词(可不填)" id="control_term">
+
+        <button type="button" id="select_ei">查询</button>
+
+        <button style="margin-left: 52.5%" type="button" data-toggle="modal" data-target="#exampleModal" data-whatever="@getbootstrap">导出</button>
+
+    </div>
+    <div style="width: 70%; margin-left: 15%;">
+        <table id="ei_tab" data-show-columns="true">
+        </table>
+    </div>
+
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title" id="exampleModalLabel">受数据格式影响每次最多导出五千</h3>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">起始:</label>
+                <input type="text" class="form-control" id="start_num">
+              </div>
+              <div class="form-group">
+                <label for="message-text" class="col-form-label">结束:</label>
+                <input type="text" class="form-control" id="end_num">
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+            <button type="button"  id="movement" class="btn btn-primary">确定</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+</body>
+</html>

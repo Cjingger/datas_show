@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>数据展示</title>
+    <link rel="stylesheet" href="../../static/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../static/bootstraptable/bootstrap-table.min.css">
+    <link rel="stylesheet" href="../../static/layui/css/layui.css">
+    <script src="../../static/jquery.js"></script>
+    <script src="../../static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../../static/echarts.min.js"></script>
+    <script src="../../static/theme/macarons.js"></script>
+    <script src="../../static/layui/layui.js"></script>
+    <script src="../../static/layui/dataTable.js" charset="utf-8"></script>
+</head>
+<body>
+{%  csrf_token %}
+    <div style="margin-top:10px;margin-left: 20px;font-size: 15px">
+        <span>欢迎: {{name}}</span>
+        <span><a href="/home">首页</a></span>
+        <span><a href="/person" style="margin-left: 85%">个人中心</a></span>
+        <span><a href="/loginout" >退出</a></span>
+    </div>
+
+    <div class="layui-tab" style="width: 100%;height: 200px;margin-bottom: 20px">
+			<ul class="layui-tab-title">
+				<li class="layui-this">基本信息</li>
+				<li>服务信息</li>
+				<li>关系信息</li>
+			</ul>
+
+			<div class="layui-tab-content">
+
+				<div class="layui-tab-item layui-show">
+					<!-- 表格数据 -->
+					<table id="sysVolTable"></table>
+					<!-- 序号自增:翻页有小问题，点击下一页又从1开始计数，待改进 -->
+					<script type="text/html" id="indexTp1">
+						{{d.LAY_TABLE_INDEX}}
+					</script>
+				</div>
+
+				<div class="layui-tab-item ">服务纬度</div>
+				<div class="layui-tab-item ">关系数</div>
+
+			</div>
+		</div>
+		<!-- 选项卡：功能性设置 -->
+		<script>
+			layui.use('element',function(){
+				var element=layui.element;
+
+			});
+		</script>
+        <div id="bar" style="width: 100%;height: 400px;position:relative; margin-bottom: 30px" overflow="hidden"></div>
+        <div id="chartMain" style="width: 100%;height:800px;position: relative"></div>
+    <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myBar = echarts.init(document.getElementById("bar"));
+         var barOption = {
+
+             title : {
+                text: '每月实际爬取数据量和预估数据量',
+                subtext: '虚构',
+                sublink: 'http://e.weibo.com/1341556070/AizJXrAEa'
+            },
+        tooltip : {
+            trigger: 'axis',
+            axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+            },
+            formatter: function (params){
+                return params[0].name + '<br/>'
+                       + params[0].seriesName + ' : ' + params[0].value + '<br/>'
+                       + params[1].seriesName + ' : ' + (params[1].value);
+            }
+        },
+        legend: {
+            selectedMode:false,
+            data:['实际数据量', '预估数据量']
+        },
+        toolbox: {
+            show : true,
+            feature : {
+                mark : {show: true},
+                dataView : {show: true, readOnly: false},
+                restore : {show: true},
+                saveAsImage : {show: true}
+            }
+        },
+        calculable : true,
+        xAxis : [
+            {
+                type : 'category',
+                data : ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月']
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value',
+                boundaryGap: [0, 0.1]
+            }
+        ],
+        series : [
+            {
+                name:'实际数据量',
+                type:'bar',
+                stack: 'sum',
+                barCategoryGap: '50%',
+                itemStyle: {
+                    normal: {
+                        color: 'rgb(25,25,112)',
+                        barBorderColor: 'rgb(25,25,112)',
+                        barBorderWidth: 6,
+                        barBorderRadius:0,
+                        label : {
+                            show: true, position: 'insideTop'
+                        }
+                    }
+                },
+                data:[4300, 1310, 1205, 1450, 2300, 2100, 2100, 2100, 3200, 4500, 1100, 100]
+            },
+            {
+                name:'预估数据量',
+                type:'bar',
+                stack: 'sum',
+                itemStyle: {
+                    normal: {
+                        color: 'rgb(245,255,250)',
+                        barBorderColor: 'rgb(25,25,112)',
+                        barBorderWidth: 6,
+                        barBorderRadius:0,
+                        label : {
+                            show: true,
+                            position: 'top',
+                            formatter: function (params) {
+                                for (var i = 0, l = barOption.xAxis[0].data.length; i < l; i++) {
+                                    if (barOption.xAxis[0].data[i] == params.name) {
+                                        return params.value;
+                                        {#windows.locaton.reload();#}
+                                    }
+                                }
+                            },
+                            textStyle: {
+                                color: 'rgb(25,25,112)'
+                            }
+                        }
+                    }
+                },
+                data:[1300, 2000, 1205, 1450, 2000, 2100, 2100, 2100, 3200, 4500, 1100, 100]
+            }
+        ]};
+
+        var myChart = echarts.init(document.getElementById("chartMain"))
+        var option = {
+            title : {
+                text: '各数据库每年数据量',
+                subtext: '数据来源'
+            },
+            legend: {},
+        tooltip: {
+            //trigger: 'axis',
+            showContent: true,
+        },
+        dataset: {
+            source: [
+                ['dataBase', '2015', '2016', '2017', '2018', '2019', '2020', '2021'],
+                ['Scopus', 65242, 65242, 65242, 117378, 117378, 117378, 89811],
+                ['IEEE', 1023, 982, 1024, 1284, 1882, 2443, 51],
+                ['EI', 144384, 183481, 232162, 261079, 303594, 37526, 1907276],
+                ['Sci', 0, 130988, 169074, 237142, 380074, 260139, 103],
+                ['Hans', 1778, 1898, 2747, 3720, 4662, 2657, 0],
+                ['ScienceDirect', 3613, 2745, 8605, 4850, 8980, 2443, 0],
+                ['Springer', Math.random()*8997+903, Math.random()*8997+903, Math.random()*8997+903, Math.random()*8997+903, Math.random()*8997+903, Math.random()*8997+903, Math.random()*8997+903],
+                ['Wiley', Math.random()*8997+903, Math.random()*8997+903, Math.random()*8997+903, Math.random()*8997+903, Math.random()*8997+903, Math.random()*8997+903, Math.random()*8997+903],
+                ['Hans', Math.random()*8997+903, Math.random()*8997+903, Math.random()*8997+903, Math.random()*8997+903, Math.random()*8997+903, Math.random()*8997+903, Math.random()*8997+903],
+
+            ]
+        },
+        xAxis: {type: 'category',
+                triggerEvent: true,
+                //axisPointer: {show:true}
+            },
+        yAxis: {gridIndex: 0},
+        grid: {top: '55%'},
+        series: [
+            {type: 'line', smooth: true, seriesLayoutBy: 'row', symbolSize: 10},
+            {type: 'line', smooth: true, seriesLayoutBy: 'row', symbolSize: 10},
+            {type: 'line', smooth: true, seriesLayoutBy: 'row', symbolSize: 10},
+            {type: 'line', smooth: true, seriesLayoutBy: 'row', symbolSize: 10},
+            {type: 'line', smooth: true, seriesLayoutBy: 'row', symbolSize: 10},
+            {type: 'line', smooth: true, seriesLayoutBy: 'row', symbolSize: 10},
+            {type: 'line', smooth: true, seriesLayoutBy: 'row', symbolSize: 10},
+            {type: 'line', smooth: true, seriesLayoutBy: 'row', symbolSize: 10},
+            {type: 'line', smooth: true, seriesLayoutBy: 'row', symbolSize: 10},
+
+            {
+                type: 'pie',
+                id: 'pie',
+                radius: '30%',
+                center: ['50%', '25%'],
+                label: {
+                    formatter: '{b}: {@[2015]} ({d}%)'
+                },
+                encode: {
+                    itemName: 'product',
+                    value: '2015',
+                    tooltip: '2015'
+                }
+            }
+        ]
+        };
+
+        setTimeout(function () {
+            myChart.on('mouseover',function(params){
+
+                if(params.componentType == "xAxis"){
+                    var xAxisInfo = params.value;
+                    myChart.setOption({
+                        series: {
+                            id: 'pie',
+                            label: {
+                                formatter: '{b}: {@[' + xAxisInfo + ']} ({d}%)'
+                            },
+                            encode: {
+                                value: xAxisInfo,
+                                tooltip: xAxisInfo
+                            }
+                        }
+                    });
+                }
+                else if(params.componentType == "series" && params.seriesType == 'line'){
+                    var xAxisInfo = params.value[0];
+                    myChart.setOption({
+                        series: {
+                            id: 'pie',
+                            label: {
+                                formatter: '{b}: {@[' + xAxisInfo + ']} ({d}%)'
+                            },
+                            encode: {
+                                value: xAxisInfo,
+                                tooltip: xAxisInfo
+                            }
+                        }
+                    });
+                }
+                setTimeout(function(){
+                    myChart.dispatchAction({
+                        type: 'highlight',
+                        seriesIndex: 4,
+                        dataIndex: params.seriesIndex
+                        });
+                    },300);
+                });
+            myChart.on('mouseout',function(params){
+                myChart.dispatchAction({
+                    type: 'downplay',
+                    seriesIndex: 4,
+                    dataIndex: params.seriesIndex
+                    });
+                });
+        },1);
+
+        myBar.setOption(barOption);
+        myChart.setOption(option);
+
+    </script>
+</body>
+</html>

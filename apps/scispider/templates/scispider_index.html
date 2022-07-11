@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../../static/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../static/bootstraptable/bootstrap-table.min.css">
+    <script src="../../static/jquery.js"></script>
+    <script src="../../static/scispider_app/scispider.js"></script>
+    <script src="../../static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../../static/bootstraptable/bootstrap-table.min.js"></script>
+    <script src="../../static/bootstraptable/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script src="../../static/JsonExportExcel.min.js"></script>
+
+
+    <style>
+    .bootstrap-table{
+        width: 60%;
+    }
+    .spider-table{
+        border-collapse:collapse;
+        border:none;
+    }
+    .spider-td{
+        border:solid #DCDFE6 1px;
+    }
+
+    </style>
+
+</head>
+<body>
+{% csrf_token %}
+    <div style="margin-top:10px;margin-left: 20px;font-size: 15px">
+        <span>欢迎: {{name}}</span>
+        <span><a href="/home">首页</a></span>
+        <span><a href="/person" style="margin-left: 85%">个人中心</a></span>
+        <span><a href="/loginout" >退出</a></span>
+    </div>
+
+    <div >
+        <div style="margin-left: 20%">
+            <p>注: 有sci数据需求的请在sci网站在下 <b>注意以下几点</b> </p>
+            <p>1. 选择导出格式为: <b>其他文件格式</b> </p>
+            <p>2. 记录内容为: <b>全记录</b> </p>
+            <p>3. 文件格式为: <b>其他参考文件软件</b> </p>
+
+            <b>请上传已下载的sci txt文件(可选择多个文本)</b>
+            <br>
+            <input type="file" id="file_upload" multiple>
+            <br>
+            <p style="color:#fc636b; ">请在下方填写专业或关键词,方便自己辨认抓取的内容(可不填,分不清别问我)</p>
+            <input type="text" id="subject" >
+            <br>
+            <p></p>
+            <button type="button" id="btn_send" onclick="show_confirm()">点击解析</button>
+        </div>>
+
+        <div  align="center">
+            <h3>解析记录</h3>
+            <table id="show_sci_history">
+            </table>
+
+        </div>
+
+
+    </div>
+</body>
+</html>

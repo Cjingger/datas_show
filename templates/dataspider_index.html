@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>数据抓取</title>
+    <link rel="stylesheet" href="../../static/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../static/bootstraptable/bootstrap-table.min.css">
+    <script src="../../static/jquery.js"></script>
+    <script src="../../static/unspider/js/unspider_index.js"></script>
+    <script src="../../static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../../static/bootstraptable/bootstrap-table.min.js"></script>
+    <script src="../../static/bootstraptable/locale/bootstrap-table-zh-CN.min.js"></script>
+
+    <script src="../../static/bootstrap/js/fileinput.min.js"></script>
+    <link rel="stylesheet" href="../../static/bootstrap/css/fileinput.min.css">
+    <script src="../../static/bootstrap/js/zh.js"></script>
+    <link rel="stylesheet" href="../../static/unspider/css/unspider_index.css">
+    <script>
+        css_metronic.Include("../../static/bootstrap/css/fileinput.min.css");
+        js_metronic.Include("../../static/bootstrap/js/fileinput.min.js");
+        js_metronic.Include("../../static/bootstrap/js/zh.js");
+        bundles.Add(css_metronic);
+        bundles.Add(js_metronic);
+    </script>
+
+
+    <style>
+    .bootstrap-table{
+        width: 60%;
+    }
+    .spider-table{
+        border-collapse:collapse;
+        border:none;
+    }
+    .spider-td{
+        border:solid #DCDFE6 1px;
+    }
+
+
+    </style>
+
+
+</head>
+<body>
+{% csrf_token %}
+    <div style="margin-top:10px;margin-left: 20px;font-size: 15px">
+        <span>欢迎: {{name}}</span>
+        <span><a href="/home">首页</a></span>
+        <span><a href="/person" style="margin-left: 85%">个人中心</a></span>
+        <span><a href="/loginout" >退出</a></span>
+    </div>
+
+
+    <!--导入数据操作层-->
+    <div id="import" class="modal fade bs-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+         <div class="modal-dialog modal-lg">
+         <div class="modal-content">
+         <div class="modal-header bg-primary">
+         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+         <h4 class="modal-title">文件导入</h4>
+         </div>
+         <div class="modal-body">
+         <div style="text-align:right;padding:5px">
+          <a href="../static/files/scopus_water_resource.xlsx" rel="external nofollow" onclick="Preview();">
+          <img alt="模板" src="../static/images/icon01.png" />
+          <span style="font-size:larger;font-weight:200;color:#ff0000">模板.xlsx</span>
+          </a>
+         </div>
+         <hr/>
+         <form id="ffImport" method="post">
+          <div title="Excel导入操作" style="padding: 5px">
+          <input type="hidden" id="AttachGUID" name="AttachGUID" />
+          <input id="excelFile" type="file">
+          </div>
+         </form>
+         <!--数据显示表格-->
+         <table id="gridImport" class="table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" border="0">
+         </table>
+         </div>
+         <div class="modal-footer">
+         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+         <button type="button" class="btn btn-primary" onclick="SaveImport()">保存</button>
+         </div>
+         </div>
+         </div>
+    </div>
+    <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+        <button type="submit" name="Create" id="btn_import_paper" class="btn btn-primary btn-sm" style="margin-bottom:5px;margin-right:8px;"><i class="icon-upload-alt"></i>&nbsp;&nbsp;导入</button>
+        <div class="row" style="margin-top:20px;">
+                    <input id="paper_file" name="paper_file" type="file" style="display:none">
+                    <div class="col-md-2" style="padding-top:7px;text-align:right;"><label>选择导入的Excel模板</label></div>
+        <div class="col-md-4">
+                        <input id="photoCover" class="form-control" type="text" style="height:30px;"></div>
+                        <a class="btn btn-primary btn-sm" onclick="$('input[id=paper_file]').click();"><i class="icon-folder-open"></i>&nbsp;&nbsp;浏览文件</a>
+            </div>
+    </form>
+{#    <div class="modal-body">#}
+{#        <div class="row">#}
+{#            <div class="form-group">#}
+{#                <div id="res_tree">#}
+{#                    <input id="excelFile" name="excelFile" type="file" multiple="multiple" accept=".xls,.xlsx"/>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+<br>
+    <div align="center">
+        <h4>个人抓取记录</h4>
+        <table id="show_spider_history">
+        </table>
+
+    </div>
+
+<script>
+    //初始化Excel导入的文件
+    function InitExcelFile() {
+        //记录GUID
+        $("#AttachGUID").val(newGuid());
+        $("#excelFile").fileinput({
+        uploadUrl: "/dataspider",//上传的地址
+        uploadAsync: true, //异步上传
+        language: "zh",  //设置语言
+        showCaption: true, //是否显示标题
+        showUpload: true, //是否显示上传按钮
+        showRemove: true, //是否显示移除按钮
+        showPreview : true, //是否显示预览按钮
+        browseClass: "btn btn-primary", //按钮样式
+        dropZoneEnabled: false, //是否显示拖拽区域
+        allowedFileExtensions: ["xls", "xlsx"], //接收的文件后缀
+        maxFileCount: 1,  //最大上传文件数限制
+        previewFileIcon: '<i class="glyphicon glyphicon-file"></i>',
+        allowedPreviewTypes: null,
+        previewFileIconSettings: {
+         'docx': '<i class="glyphicon glyphicon-file"></i>',
+         'xlsx': '<i class="glyphicon glyphicon-file"></i>',
+         'pptx': '<i class="glyphicon glyphicon-file"></i>',
+         'jpg': '<i class="glyphicon glyphicon-picture"></i>',
+         'pdf': '<i class="glyphicon glyphicon-file"></i>',
+         'zip': '<i class="glyphicon glyphicon-file"></i>',
+        },
+        uploadExtraData: { //上传的时候，增加的附加参数
+         folder: '数据导入文件', guid: $("#AttachGUID").val()
+        }
+        }) //文件上传完成后的事件
+        .on('fileuploaded', function (event, data, previewId, index) {
+        var form = data.form, files = data.files, extra = data.extra,
+         response = data.response, reader = data.reader;
+        var res = data.response; //返回结果
+        if (res.Success) {
+         showTips('上传成功');
+         var guid = $("#AttachGUID").val();
+         //提示用户Excel格式是否正常，如果正常加载数据
+         $.ajax({
+         url: '/TestUser/CheckExcelColumns?guid=' + guid,
+         type: 'get',
+         dataType: 'json',
+         success: function (data) {
+         if (data.Success) {
+         InitImport(guid); //重新刷新表格数据
+         showToast("文件已上传，数据加载完毕！");
+         //重新刷新GUID，以及清空文件，方便下一次处理
+         RefreshExcel();
+         }
+         else {
+         showToast("上传的Excel文件检查不通过。请根据页面右上角的Excel模板格式进行数据录入。", "error");
+         }
+         }
+         });
+        }
+        else {
+         showTips('上传失败');
+        }
+        });
+
+
+}
+    $('input[id=paper_file]').change(function() {
+        $("#rst_message").remove();
+        $('#photoCover').val($(this).val().replace("C:\\fakepath\\", ""));
+    });
+
+   $("#btn_import_paper").click(function () {
+            var fileobj = $('#excelFile')[0].files[0];   //先将jquery对象转换为dom对象
+            var form = new FormData();
+            form.append('excelFile',fileobj);
+          $.ajax({
+            url: 'dataspider/import_paper',
+            data: form,
+            processData:false,
+            contentType:false,
+            type: 'GET',
+          }).done(function(response, textStatus, jqXHR){ //same as .success (depricated as of 1.8)
+            console.log("done");
+            console.dir(arguments);
+            //alert("cool");
+          })
+          .fail(function(jqXHR, textStatus, errorThrown){ //replaces .error
+            console.log("error");
+            console.dir(arguments);
+          })
+          .always(function(/*data|jqXHR, textStatus, jqXHR|errorThrown*/){ //replaces .complete
+            console.log("always");
+            console.dir(arguments);
+          });
+        });
+
+
+
+        //根据条件查询并绑定结果
+    var $import;
+    function InitImport(guid) {
+    var url = "/TestUser/GetExcelData?guid=" + guid;
+    $import = $('#gridImport').bootstrapTable({
+    url: url,  //请求后台的URL（*）
+    method: 'GET',  //请求方式（*）
+    striped: true,  //是否显示行间隔色
+    cache: false,  //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+    pagination: false,  //是否显示分页（*）
+    sidePagination: "server", //分页方式：client客户端分页，server服务端分页（*）
+    pageNumber: 1,  //初始化加载第一页，默认第一页,并记录
+    pageSize: 100,  //每页的记录行数（*）
+    pageList: [10, 25, 50, 100], //可供选择的每页的行数（*）
+    search: false,  //是否显示表格搜索
+    strictSearch: true,
+    showColumns: true,  //是否显示所有的列（选择显示的列）
+    showRefresh: true,  //是否显示刷新按钮
+    minimumCountColumns: 2, //最少允许的列数
+    clickToSelect: true, //是否启用点击选中行
+    uniqueId: "ID",  //每一行的唯一标识，一般为主键列
+    queryParams: function (params) { },
+    columns: [{
+     checkbox: true,
+     visible: true  //是否显示复选框
+    }, {
+                    field: 'id',
+                    title: 'id',
+
+
+                },
+                {
+                    field: 'time',
+                    title: '时间',
+
+                },
+                {
+                    field: 'data_from',
+                    title: '数据来源',
+
+                },
+                {
+                    field: 'subdiscipline',
+                    title: '副学科',
+
+
+                },
+                {
+                    field: 'classify',
+                    title: '期刊名',
+
+                },
+                {
+                    field: 'keywords',
+                    title: '关键词',
+
+
+                },
+                {
+                    field: 'discipline',
+                    title: '主学科',
+
+
+                },
+                {
+                    field: 'statu',
+                    title: '抓取状态',
+
+
+                },
+                {
+                    field: 'name',
+                    title: '姓名',
+
+
+                }],
+    onLoadSuccess: function () {
+    },
+    onLoadError: function () {
+     showTips("数据加载失败！");
+    },
+    });
+    }
+
+
+    function init_data() {
+        var _init_tab = $('#show_spider_history');
+        _init_tab.bootstrapTable({
+            url:'/dataspider/show_spider_history/',
+            method: 'GET',
+            dataType: "json",
+            uniqueId: 'id',
+            striped: true,
+            cache: false,
+            sortName: 'id',
+            sortable: false,
+            sortOrder: 'desc',
+            sidePagination: "server",
+            undefinedText: '--',
+            singleSelect: false,
+            search: false,
+            strictSearch: true,
+            clickToSelect: true,
+            pagination: true,
+            pageNumber: 1,
+            pageSize: 10,
+            paginationPreText: "<",
+            paginationNextText: ">",
+            queryParamsType: "",
+            showRefresh: true,
+            responseHandler: responseHandler,
+
+            queryParams: function (params) {
+                var temp = {
+                    'offset': this.pageNumber, // SQL语句起始索引
+                    'pagesize': this.pageSize
+                };
+                return temp;
+            },
+
+            columns: [{
+                    field: 'id',
+                    title: 'id',
+
+
+                },
+                {
+                    field: 'time',
+                    title: '时间',
+
+                },
+                {
+                    field: 'data_from',
+                    title: '数据来源',
+
+                },
+                {
+                    field: 'subdiscipline',
+                    title: '副学科',
+
+
+                },
+                {
+                    field: 'classify',
+                    title: '期刊名',
+
+                },
+                {
+                    field: 'keywords',
+                    title: '关键词',
+
+
+                },
+                {
+                    field: 'discipline',
+                    title: '主学科',
+
+
+                },
+                {
+                    field: 'statu',
+                    title: '抓取状态',
+
+
+                },
+                {
+                    field: 'name',
+                    title: '姓名',
+
+
+                },
+
+            ],
+
+            onLoadError: function () {
+                alert("数据加载失败！", "错误提示");
+            },
+            //onClickRow: function (row, $element) {
+            //    EditViewById(id, 'view');
+            //}
+        });
+
+    }
+    $(function () {
+        // $('#un_history').click(function () {
+        init_data()
+            // _init_tab.bootstrapTable('refresh'); //刷新表格
+
+        // });
+    });
+
+
+    function responseHandler(res) {
+        if (res) {
+            return {
+                "rows" : res.rows,
+                "total" : res.total,
+                // 'nums':$('#toolbar').html('总共搜索到' + '<a> ' + res.nums  + ' </a> '+ '条数据')
+            };
+        } else {
+            return {
+                "rows": [],
+                "total": 0,
+                // 'nums':$('#toolbar').html('总共搜索到<a> 0 </a>条数据')
+            };
+        }}
+
+</script>
+</body>
+</html>

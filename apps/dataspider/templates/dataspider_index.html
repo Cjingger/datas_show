@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>数据抓取</title>
+    <link rel="stylesheet" href="../../static/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../static/bootstraptable/bootstrap-table.min.css">
+    <script src="../../static/jquery.js"></script>
+    <script src="../../static/unspider/js/unspider_index.js"></script>
+    <script src="../../static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../../static/bootstraptable/bootstrap-table.min.js"></script>
+    <script src="../../static/bootstraptable/locale/bootstrap-table-zh-CN.min.js"></script>
+    <link rel="stylesheet" href="../../static/unspider/css/unspider_index.css">
+
+    <style>
+    .bootstrap-table{
+        width: 60%;
+    }
+    .spider-table{
+        border-collapse:collapse;
+        border:none;
+    }
+    .spider-td{
+        border:solid #DCDFE6 1px;
+    }
+
+
+    </style>
+
+
+</head>
+<body>
+{% csrf_token %}
+    <div style="margin-top:10px;margin-left: 20px;font-size: 15px">
+        <span>欢迎: {{name}}</span>
+        <span><a href="/home">首页</a></span>
+        <span><a href="/person" style="margin-left: 85%">个人中心</a></span>
+        <span><a href="/loginout" >退出</a></span>
+    </div>
+
+
+    <div align="center" >
+        <div>
+            <h1>请填入需要抓取的对应字段信息</h1>
+        </div>
+
+        <table class="spider-table">
+            <tr class="un-info">
+                <td class="spider-td">数据库</td>
+                <td class="spider-td">链接来源</td>
+                <td class="spider-td" >国家\地区</td>
+                <td class="spider-td" >期刊名</td>
+                <td class="spider-td" >关键词</td>
+                <td class="spider-td" >主学科</td>
+                <td class="spider-td" >副学科</td>
+            </tr>
+            <tr class="un-info">
+                <td class="spider-td" contenteditable="true"></td>
+                <td class="spider-td" contenteditable="true"></td>
+                <td class="spider-td" contenteditable="true"></td>
+                <td class="spider-td" contenteditable="true"></td>
+                <td class="spider-td" contenteditable="true"></td>
+                <td class="spider-td" contenteditable="true"></td>
+                <td class="spider-td" contenteditable="true"></td>
+
+            </tr>
+
+            <tr class="un-info">
+                <td class="spider-td" contenteditable="true"></td>
+                <td class="spider-td" contenteditable="true"></td>
+                <td class="spider-td" contenteditable="true"></td>
+                <td class="spider-td" contenteditable="true"></td>
+                <td class="spider-td" contenteditable="true"></td>
+                <td class="spider-td" contenteditable="true"></td>
+                <td class="spider-td" contenteditable="true"></td>
+
+            </tr>
+            <tr class="un-info">
+                <td  class="spider-td" contenteditable="true"></td>
+                <td  class="spider-td" contenteditable="true"></td>
+                <td  class="spider-td" contenteditable="true"></td>
+                <td  class="spider-td" contenteditable="true"></td>
+                <td class="spider-td" contenteditable="true"></td>
+                <td class="spider-td" contenteditable="true"></td>
+                <td class="spider-td" contenteditable="true"></td>
+
+            </tr>
+            <tr class="un-info">
+                <td class="spider-td" contenteditable="true"></td>
+                <td class="spider-td" contenteditable="true"></td>
+                <td class="spider-td" contenteditable="true"></td>
+                <td class="spider-td" contenteditable="true"></td>
+                <td class="spider-td" contenteditable="true"></td>
+                <td class="spider-td" contenteditable="true"></td>
+                <td class="spider-td" contenteditable="true"></td>
+
+
+            </tr >
+            <tr class="un-info">
+                <td class="spider-td" contenteditable="true"></td>
+                <td class="spider-td" contenteditable="true"></td>
+                <td class="spider-td" contenteditable="true"></td>
+                <td class="spider-td" contenteditable="true"></td>
+                <td class="spider-td" contenteditable="true"></td>
+                <td class="spider-td" contenteditable="true"></td>
+                <td class="spider-td" contenteditable="true"></td>
+
+
+            </tr>
+
+        </table>
+        <button type="button" onclick="show_confirm()" id="btn-info" class="btn_">提交</button>
+    </div>
+<br>
+    <div align="center">
+        <h4>个人抓取记录</h4>
+        <table id="show_un_history">
+        </table>
+
+    </div>
+
+</body>
+</html>

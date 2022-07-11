@@ -1,0 +1,7 @@
+Django==3.0.1
+requests==2.22.0
+PyMySQL==0.9.3
+DBUtils==2.0.1
+xpinyin==0.7.6
+aiohttp==3.6.2
+lxml==4.3.2
